@@ -19,7 +19,7 @@ func main() {
 	tracer, closer := tracing.Init(thisServiceName)
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
-
+	log.Println(os.LookupEnv("JAEGER_AGENT_PORT"))
 	outboundHostPort, ok := os.LookupEnv("OUTBOUND_HOST_PORT")
 	if !ok {
 		outboundHostPort = "localhost:8082"
@@ -36,6 +36,7 @@ func main() {
 		}
 		w.Write([]byte(fmt.Sprintf("%s -> %s", thisServiceName, response)))
 	})
+
 	log.Printf("Listening on localhost:8081")
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }
